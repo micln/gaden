@@ -45,13 +45,13 @@ func init() {
 	}
 
 	if len(ff.LocalFile) == 0 {
-		LogWarning(`empty filename`)
+		LogWarning(`no input files`)
 		ff.Print()
 		ff.Exit()
 	}
 
 	if len(ff.CloudDir) == 0 {
-		LogError(`empty target path`)
+		LogError(`no target path`)
 	}
 
 	tar := NewFile(*target)

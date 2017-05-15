@@ -1,9 +1,7 @@
 package main
 
 import (
-	"log"
 	"os"
-	"os/exec"
 )
 
 var VERSION = `0.1`
@@ -13,9 +11,6 @@ var HOME = os.Getenv(`HOME`)
 
 func init() {
 	os.Chdir(HOME)
-
-	cmd := exec.Command(`mv`, `a b/c d`, `e b`)
-	log.Fatalln(cmd)
 }
 
 func main() {

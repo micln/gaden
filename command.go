@@ -1,6 +1,10 @@
 package main
 
-import "path"
+import (
+	"log"
+
+	"github.com/micln/go-utils"
+)
 
 type Command struct {
 	Action    string
@@ -23,10 +27,9 @@ func NewCommandFromFlag(ff *Flag) *Command {
 		cmd.Overwrite = true
 	}
 
-	if !ff.IsConfigFile {
-
-		panic(`config file is not support yet !`)
-
+	if ff.IsConfigFile {
+		LogError(`config file is not support yet !`)
+	} else {
 		cmd.File = NewFile(ff.LocalFile)
 	}
 
@@ -53,26 +56,29 @@ func ListActions() []string {
 }
 
 func (cmd *Command) Run() {
+	handle := cmd.getActionFunc()
 
+	log.Println(cmd.File.LocalPath())
+	log.Println(go_utils.JsonEncode(cmd))
+
+	handle(cmd.File)
 }
 
 func (cmd *Command) getActionFunc() func(*File) {
 
 	if cmd.Action == ACTION_BACKUP {
 		return func(f *File) {
-			src := f.LocalPath()
-			f.MoveTo(path.Join(cmd.ff.CloudDir, f.LocalPath()))
-			f.LinkTo(src)
+			f.BackupIn(cmd.ff.CloudDir)
 		}
 	}
 
 	if cmd.Action == ACTION_UNINSTALL {
 		return func(f *File) {
-
+			f.UninstallFrom(cmd.ff.CloudDir)
 		}
 	}
 
-	panic(`error`)
+	panic(`unknown action`)
 
 }
 
